@@ -262,6 +262,193 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/09/mybatis分析/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liangsu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liangsu's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/09/mybatis分析/" itemprop="url">mybatis</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-09T22:12:47+08:00">
+                2019-03-09
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="mybatis"><a href="#mybatis" class="headerlink" title="mybatis"></a>mybatis</h1><h2 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h2><ul>
+<li>mybatis拦截器讲解： <a href="https://www.cnblogs.com/fangjian0423/p/mybatis-interceptor.html" target="_blank" rel="noopener">https://www.cnblogs.com/fangjian0423/p/mybatis-interceptor.html</a></li>
+<li>存放所有的拦截器： org.apache.ibatis.plugin.InterceptorChain</li>
+<li>用于获取一个对象的可用拦截器： org.apache.ibatis.plugin.InterceptorChain#pluginAll </li>
+<li>判断本拦截器是否适用于某个类： org.apache.ibatis.plugin.Interceptor#plugin</li>
+<li>判断某个类是否能使用这个拦截器： org.apache.ibatis.plugin.Plugin#wrap ，且Plugin是创建的代理处理器，该类的invoke方法是真正判断是否调用interceptor方法</li>
+</ul>
+<h2 id="mybatis查询执行顺序："><a href="#mybatis查询执行顺序：" class="headerlink" title="mybatis查询执行顺序："></a>mybatis查询执行顺序：</h2><ul>
+<li>sqlSessionTemplate执行select查询 -&gt; 获取sqlsessionFactory ——&gt; 开启sqlSession (包含executor) —&gt; 执行executor的query(4个参数) –&gt; 执行executor的query(6个参数) –&gt; 执行statementHandler.query<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">interceptor3（4个参数）</span><br><span class="line">interceptor2 （4个参数）</span><br><span class="line">	query(6个参数)</span><br><span class="line">interceptor1 (6个参数)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="mybatis的mapper"><a href="#mybatis的mapper" class="headerlink" title="mybatis的mapper"></a>mybatis的mapper</h2><ul>
+<li>mapper的代理类： org.apache.ibatis.binding.MapperProxy</li>
+<li>spring与mybatis结合生成mapper的bean类：mapperFactoryBean</li>
+</ul>
+<h2 id="sql解析"><a href="#sql解析" class="headerlink" title="sql解析"></a>sql解析</h2><ul>
+<li>解析类：org.apache.ibatis.builder.SqlSourceBuilder</li>
+</ul>
+<h1 id="mybatis-pagehelper："><a href="#mybatis-pagehelper：" class="headerlink" title="mybatis-pagehelper："></a>mybatis-pagehelper：</h1><ul>
+<li>分页核心类拦截器： com.github.pagehelper.PageInterceptor</li>
+<li>pagehelper拦截器详解： <a href="https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/Interceptor.md" target="_blank" rel="noopener">https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/Interceptor.md</a></li>
+<li>疑问：既然query(4个参数)的方法，最终会调用query(6个参数)的方法，为什么PageInterceptor不做成只拦截query(6个参数)，这样还不会打乱拦截器的执行顺序</li>
+</ul>
+<h1 id="mybatis-plus"><a href="#mybatis-plus" class="headerlink" title="mybatis-plus:"></a>mybatis-plus:</h1><ul>
+<li>通过重新sqlSessionFactory类来达到生成简单的crud方法</li>
+<li>mapper简单CRUD的xml解析注入接口：com.baomidou.mybatisplus.core.injector.ISqlInjector</li>
+</ul>
+<h1 id="mybatis-plus中使用缓存"><a href="#mybatis-plus中使用缓存" class="headerlink" title="mybatis-plus中使用缓存"></a>mybatis-plus中使用缓存</h1><blockquote>
+<blockquote>
+<p>只有通过id获取对象的方法才使用缓存，其它的update、insert、delete方法清空缓存</p>
+<ul>
+<li></li>
+</ul>
+</blockquote>
+</blockquote>
+<p>/<em>mycat: datanode=dn1</em>/select count(*) from dth_affair;</p>
+<ol>
+<li>将主键字段都改为id，如sys_user表的user_id改为id，<ul>
+<li>注意修改model.java</li>
+<li>注意修改mapper.xml文件，以及使用了这张表的其它xml文件</li>
+<li>注意修改页面上的html</li>
+</ul>
+</li>
+<li>将所有的mapper接口类，继承自com.sccl.base.mapper.MybatisMapper</li>
+</ol>
+<ol>
+<li>使用mybatis-plus修改分页查询</li>
+<li>增加根据id、shardKey的查询方法</li>
+</ol>
+<ol>
+<li>部分更新</li>
+<li>即使为空也更新<if test="affairName!= null  and affairName !='' ">    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</if></li>
+</ol>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/08/hello-world/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -690,6 +877,176 @@
   
   
   <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/07/redis指南/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liangsu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liangsu's Notes">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2019/03/07/redis指南/" itemprop="url">redis</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-07T22:12:47+08:00">
+                2019-03-07
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+            <h1 id="redis"><a href="#redis" class="headerlink" title="redis"></a>redis</h1><h2 id="简介"><a href="#简介" class="headerlink" title="简介"></a>简介</h2><ul>
+<li>redis常用场景：会话缓存、数据库缓存、排行榜/计数器、发布订阅、实现分布式锁、队列</li>
+</ul>
+<h2 id="安装（略）"><a href="#安装（略）" class="headerlink" title="安装（略）"></a>安装（略）</h2><ul>
+<li>make</li>
+<li>make PREFIX=/app/redis-5.0.4 install</li>
+</ul>
+<h2 id="实现分布式锁：setnx命令（或带nx参数的set命令）"><a href="#实现分布式锁：setnx命令（或带nx参数的set命令）" class="headerlink" title="实现分布式锁：setnx命令（或带nx参数的set命令）"></a>实现分布式锁：setnx命令（或带nx参数的set命令）</h2><ul>
+<li>SETNX——SET if Not eXists（如果不存在，则设置）</li>
+<li>命令格式： <code>setnx key value</code></li>
+<li>调用成功返回1，调用失败返回0<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">127.0.0.1:6379&gt; setnx locka &quot;bbb&quot;</span><br><span class="line">(integer) 1</span><br><span class="line">127.0.0.1:6379&gt; setnx locka &quot;ccc&quot;</span><br><span class="line">(integer) 0</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="Redis发布订阅与ActiveMQ的比较"><a href="#Redis发布订阅与ActiveMQ的比较" class="headerlink" title="Redis发布订阅与ActiveMQ的比较"></a>Redis发布订阅与ActiveMQ的比较</h2><ol>
+<li>ActiveMQ支持多种消息协议，包括AMQP，MQTT，Stomp等，并且支持JMS规范，但Redis没有提供对这些协议的支持； </li>
+<li>ActiveMQ提供持久化功能，但Redis无法对消息持久化存储，一旦消息被发送，如果没有订阅者接收，那么消息就会丢失； </li>
+<li>ActiveMQ提供了消息传输保障，当客户端连接超时或事务回滚等情况发生时，消息会被重新发送给客户端，Redis没有提供消息传输保障。 总之，ActiveMQ所提供的功能远比Redis发布订阅要复杂，<br>毕竟Redis不是专门做发布订阅的，但是如果系统中已经有了Redis，并且需要基本的发布订阅功能，就没有必要再安装ActiveMQ了，因为可能ActiveMQ提供的功能大部分都用不到，而Redis的发布订阅<br>机制就能满足需求。</li>
+</ol>
+<h2 id="jedis链接redis报错解决："><a href="#jedis链接redis报错解决：" class="headerlink" title="jedis链接redis报错解决："></a>jedis链接redis报错解决：</h2><ol>
+<li>创建链接报错如下，解决办法，在redis的配置文件redis.conf中添加绑定ip，如:<code>bind 127.0.0.1 192.168.199.129</code><figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">redis.clients.jedis.exceptions.JedisExhaustedPoolException: Could not get a resource since the pool is exhausted</span><br><span class="line">	at redis.clients.jedis.util.Pool.getResource(Pool.java:53)</span><br><span class="line">	at redis.clients.jedis.JedisPool.getResource(JedisPool.java:234)</span><br><span class="line">	at com.ls.RedisUtil.getJedis(RedisUtil.java:51)</span><br><span class="line">	at com.ls.TestRedis.connectRedis(TestRedis.java:18)</span><br><span class="line">	at com.ls.TestRedis.main(TestRedis.java:170)</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<h2 id="持久化"><a href="#持久化" class="headerlink" title="持久化"></a>持久化</h2><blockquote>
+<p>提供rdb、aof两种方式持久化，参考： <a href="https://www.cnblogs.com/AndyAo/p/8135980.html" target="_blank" rel="noopener">https://www.cnblogs.com/AndyAo/p/8135980.html</a></p>
+<ul>
+<li>rdb：原理是将Reids在内存中的数据库记录定时 dump到磁盘上的RDB持久化</li>
+<li>aof：原理是将Reids的操作日志以追加的方式写入文件</li>
+</ul>
+</blockquote>
+<h2 id="redis的三种集群方式"><a href="#redis的三种集群方式" class="headerlink" title="redis的三种集群方式"></a>redis的三种集群方式</h2><blockquote>
+<p>主从复制、哨兵模式、Redis-Cluster集群，Codis、Twemproxy参考：<br><a href="https://my.oschina.net/ruoli/blog/2252393" target="_blank" rel="noopener">https://my.oschina.net/ruoli/blog/2252393</a><br><a href="https://www.cnblogs.com/51life/p/10233340.html" target="_blank" rel="noopener">https://www.cnblogs.com/51life/p/10233340.html</a></p>
+</blockquote>
+<h3 id="主从复制"><a href="#主从复制" class="headerlink" title="主从复制"></a>主从复制</h3><h3 id="哨兵模式"><a href="#哨兵模式" class="headerlink" title="哨兵模式"></a>哨兵模式</h3><h3 id="Redis-Cluster集群"><a href="#Redis-Cluster集群" class="headerlink" title="Redis-Cluster集群"></a>Redis-Cluster集群</h3><ul>
+<li>配置</li>
+</ul>
+<ol>
+<li><p>开启配置,参考： <a href="https://www.cnblogs.com/wuxl360/p/5920330.html" target="_blank" rel="noopener">https://www.cnblogs.com/wuxl360/p/5920330.html</a></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">port  7000                                        //端口7000,7002,7003        </span><br><span class="line">bind 本机ip                                       //默认ip为127.0.0.1 需要改为其他节点机器可访问的ip 否则创建集群时无法访问对应的端口，无法创建集群</span><br><span class="line">daemonize    yes                               //redis后台运行</span><br><span class="line">pidfile  /var/run/redis_7000.pid          //pidfile文件对应7000,7001,7002</span><br><span class="line">cluster-enabled  yes                           //开启集群  把注释#去掉</span><br><span class="line">cluster-config-file  nodes_7000.conf   //集群的配置  配置文件首次启动自动生成 7000,7001,7002</span><br><span class="line">cluster-node-timeout  15000                //请求超时  默认15秒，可自行设置</span><br><span class="line">appendonly  yes                           //aof日志开启  有需要就开启，它会每次写操作都记录一条日志</span><br></pre></td></tr></table></figure>
+</li>
+<li><p>创建集群遇到的问题：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">// 3.0之后5.0之前的版本创建集群的命令：</span><br><span class="line">./redis-trib.rb  create  --replicas  1  127.0.0.1:7001 127.0.0.1:7002  127.0.0.1:7003 127.0.0.1:7004  127.0.0.1:7005  127.0.0.1:7006</span><br><span class="line"></span><br><span class="line">// 5.0之后的版本创建集群的命令：</span><br><span class="line">/app/redis-5.0.4/bin/redis-cli --cluster create 127.0.0.1:7001 127.0.0.1:7002 127.0.0.1:7003 127.0.0.1:7004 127.0.0.1:7005 127.0.0.1:7006 --cluster-replicas 1</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>ps aux|grep redis</p>
+<p>/app/redis-5.0.4/bin/redis-server /app/redis-5.0.4/redis-cluster/7002/redis.conf</p>
+<p>/app/redis-5.0.4/bin/redis-cli -p 7006 shutdown</p>
+<h2 id="问题："><a href="#问题：" class="headerlink" title="问题："></a>问题：</h2><ul>
+<li>redis排序的应用有哪些？</li>
+<li>redis集群方式，怎么扩容</li>
+<li>持久化</li>
+</ul>
+
+          
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
     <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/07/测试/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
@@ -847,7 +1204,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">4</span>
+                  <span class="site-state-item-count">6</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -860,7 +1217,7 @@
               
               <div class="site-state-item site-state-tags">
                 
-                  <span class="site-state-item-count">3</span>
+                  <span class="site-state-item-count">4</span>
                   <span class="site-state-item-name">标签</span>
                 
               </div>

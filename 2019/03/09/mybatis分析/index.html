@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="git,">
+  <meta name="keywords" content="mybatis,">
 
 
 
@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="1# ����ʹ��http���� git config –global http.proxy http://127.0.0.1:10808git config –global https.proxy https://127.0.0.1:10808 ����ʹ��socks5����git config –global http.proxy socks5://127.0.0.1:10808git">
-<meta name="keywords" content="git">
+<meta name="description" content="mybatis拦截器 mybatis拦截器讲解： https://www.cnblogs.com/fangjian0423/p/mybatis-interceptor.html 存放所有的拦截器： org.apache.ibatis.plugin.InterceptorChain 用于获取一个对象的可用拦截器： org.apache.ibatis.plugin.InterceptorChain#p">
+<meta name="keywords" content="mybatis">
 <meta property="og:type" content="article">
-<meta property="og:title" content="git����">
-<meta property="og:url" content="http://yoursite.com/2019/03/07/git/index.html">
+<meta property="og:title" content="mybatis">
+<meta property="og:url" content="http://yoursite.com/2019/03/09/mybatis分析/index.html">
 <meta property="og:site_name" content="liangsu&#39;s Notes">
-<meta property="og:description" content="1# ����ʹ��http���� git config –global http.proxy http://127.0.0.1:10808git config –global https.proxy https://127.0.0.1:10808 ����ʹ��socks5����git config –global http.proxy socks5://127.0.0.1:10808git">
+<meta property="og:description" content="mybatis拦截器 mybatis拦截器讲解： https://www.cnblogs.com/fangjian0423/p/mybatis-interceptor.html 存放所有的拦截器： org.apache.ibatis.plugin.InterceptorChain 用于获取一个对象的可用拦截器： org.apache.ibatis.plugin.InterceptorChain#p">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-08T12:16:46.551Z">
+<meta property="og:updated_time" content="2019-04-25T08:30:39.638Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="git����">
-<meta name="twitter:description" content="1# ����ʹ��http���� git config –global http.proxy http://127.0.0.1:10808git config –global https.proxy https://127.0.0.1:10808 ����ʹ��socks5����git config –global http.proxy socks5://127.0.0.1:10808git">
+<meta name="twitter:title" content="mybatis">
+<meta name="twitter:description" content="mybatis拦截器 mybatis拦截器讲解： https://www.cnblogs.com/fangjian0423/p/mybatis-interceptor.html 存放所有的拦截器： org.apache.ibatis.plugin.InterceptorChain 用于获取一个对象的可用拦截器： org.apache.ibatis.plugin.InterceptorChain#p">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2019/03/07/git/">
+  <link rel="canonical" href="http://yoursite.com/2019/03/09/mybatis分析/">
 
 
 
 
 
-  <title>git���� | liangsu's Notes</title>
+  <title>mybatis | liangsu's Notes</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/07/git/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/09/mybatis分析/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="liangsu">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">git����</h1>
+          <h1 class="post-title" itemprop="name headline">mybatis</h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-07T22:12:47+08:00">
-                2019-03-07
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-09T22:12:47+08:00">
+                2019-03-09
               </time>
             
 
@@ -330,10 +330,74 @@
       
 
       
-        <figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"># ����ʹ��http����</span><br></pre></td></tr></table></figure>
-<p>git config –global http.proxy <a href="http://127.0.0.1:10808" target="_blank" rel="noopener">http://127.0.0.1:10808</a><br>git config –global https.proxy <a href="https://127.0.0.1:10808" target="_blank" rel="noopener">https://127.0.0.1:10808</a></p>
-<h1 id="����ʹ��socks5����"><a href="#����ʹ��socks5����" class="headerlink" title="����ʹ��socks5����"></a>����ʹ��socks5����</h1><p>git config –global http.proxy socks5://127.0.0.1:10808<br>git config –global https.proxy socks5://127.0.0.1:10808</p>
-<h1 id="ȡ������"><a href="#ȡ������" class="headerlink" title="ȡ������"></a>ȡ������</h1><p>git config –global –unset http.proxy<br>git config –global –unset https.proxy<br><code>`</code></p>
+        <h1 id="mybatis"><a href="#mybatis" class="headerlink" title="mybatis"></a>mybatis</h1><h2 id="拦截器"><a href="#拦截器" class="headerlink" title="拦截器"></a>拦截器</h2><ul>
+<li>mybatis拦截器讲解： <a href="https://www.cnblogs.com/fangjian0423/p/mybatis-interceptor.html" target="_blank" rel="noopener">https://www.cnblogs.com/fangjian0423/p/mybatis-interceptor.html</a></li>
+<li>存放所有的拦截器： org.apache.ibatis.plugin.InterceptorChain</li>
+<li>用于获取一个对象的可用拦截器： org.apache.ibatis.plugin.InterceptorChain#pluginAll </li>
+<li>判断本拦截器是否适用于某个类： org.apache.ibatis.plugin.Interceptor#plugin</li>
+<li>判断某个类是否能使用这个拦截器： org.apache.ibatis.plugin.Plugin#wrap ，且Plugin是创建的代理处理器，该类的invoke方法是真正判断是否调用interceptor方法</li>
+</ul>
+<h2 id="mybatis查询执行顺序："><a href="#mybatis查询执行顺序：" class="headerlink" title="mybatis查询执行顺序："></a>mybatis查询执行顺序：</h2><ul>
+<li>sqlSessionTemplate执行select查询 -&gt; 获取sqlsessionFactory ——&gt; 开启sqlSession (包含executor) —&gt; 执行executor的query(4个参数) –&gt; 执行executor的query(6个参数) –&gt; 执行statementHandler.query<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line">interceptor3（4个参数）</span><br><span class="line">interceptor2 （4个参数）</span><br><span class="line">	query(6个参数)</span><br><span class="line">interceptor1 (6个参数)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<h2 id="mybatis的mapper"><a href="#mybatis的mapper" class="headerlink" title="mybatis的mapper"></a>mybatis的mapper</h2><ul>
+<li>mapper的代理类： org.apache.ibatis.binding.MapperProxy</li>
+<li>spring与mybatis结合生成mapper的bean类：mapperFactoryBean</li>
+</ul>
+<h2 id="sql解析"><a href="#sql解析" class="headerlink" title="sql解析"></a>sql解析</h2><ul>
+<li>解析类：org.apache.ibatis.builder.SqlSourceBuilder</li>
+</ul>
+<h1 id="mybatis-pagehelper："><a href="#mybatis-pagehelper：" class="headerlink" title="mybatis-pagehelper："></a>mybatis-pagehelper：</h1><ul>
+<li>分页核心类拦截器： com.github.pagehelper.PageInterceptor</li>
+<li>pagehelper拦截器详解： <a href="https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/Interceptor.md" target="_blank" rel="noopener">https://github.com/pagehelper/Mybatis-PageHelper/blob/master/wikis/zh/Interceptor.md</a></li>
+<li>疑问：既然query(4个参数)的方法，最终会调用query(6个参数)的方法，为什么PageInterceptor不做成只拦截query(6个参数)，这样还不会打乱拦截器的执行顺序</li>
+</ul>
+<h1 id="mybatis-plus"><a href="#mybatis-plus" class="headerlink" title="mybatis-plus:"></a>mybatis-plus:</h1><ul>
+<li>通过重新sqlSessionFactory类来达到生成简单的crud方法</li>
+<li>mapper简单CRUD的xml解析注入接口：com.baomidou.mybatisplus.core.injector.ISqlInjector</li>
+</ul>
+<h1 id="mybatis-plus中使用缓存"><a href="#mybatis-plus中使用缓存" class="headerlink" title="mybatis-plus中使用缓存"></a>mybatis-plus中使用缓存</h1><blockquote>
+<blockquote>
+<p>只有通过id获取对象的方法才使用缓存，其它的update、insert、delete方法清空缓存</p>
+<ul>
+<li></li>
+</ul>
+</blockquote>
+</blockquote>
+<p>/<em>mycat: datanode=dn1</em>/select count(*) from dth_affair;</p>
+<ol>
+<li>将主键字段都改为id，如sys_user表的user_id改为id，<ul>
+<li>注意修改model.java</li>
+<li>注意修改mapper.xml文件，以及使用了这张表的其它xml文件</li>
+<li>注意修改页面上的html</li>
+</ul>
+</li>
+<li>将所有的mapper接口类，继承自com.sccl.base.mapper.MybatisMapper</li>
+</ol>
+<ol>
+<li>使用mybatis-plus修改分页查询</li>
+<li>增加根据id、shardKey的查询方法</li>
+</ol>
+<ol>
+<li>部分更新</li>
+<li>即使为空也更新<if test="affairName!= null  and affairName !='' ">    
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+</if></li>
+</ol>
 
       
     </div>
@@ -351,7 +415,7 @@
       
         <div class="post-tags">
           
-            <a href="/tags/git/" rel="tag"># git</a>
+            <a href="/tags/mybatis/" rel="tag"># mybatis</a>
           
         </div>
       
@@ -364,8 +428,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2019/03/07/jvm自动内存管理/" rel="next" title="jvm自动内存管理">
-                <i class="fa fa-chevron-left"></i> jvm自动内存管理
+              <a href="/2019/03/08/hello-world/" rel="next" title="Hello World">
+                <i class="fa fa-chevron-left"></i> Hello World
               </a>
             
           </div>
@@ -373,10 +437,6 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
-            
-              <a href="/2019/03/08/hello-world/" rel="prev" title="Hello World">
-                Hello World <i class="fa fa-chevron-right"></i>
-              </a>
             
           </div>
         </div>
@@ -511,7 +571,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#����ʹ��socks5����"><span class="nav-number">1.</span> <span class="nav-text">����ʹ��socks5����</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#ȡ������"><span class="nav-number">2.</span> <span class="nav-text">ȡ������</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#mybatis"><span class="nav-number">1.</span> <span class="nav-text">mybatis</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#拦截器"><span class="nav-number">1.1.</span> <span class="nav-text">拦截器</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybatis查询执行顺序："><span class="nav-number">1.2.</span> <span class="nav-text">mybatis查询执行顺序：</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#mybatis的mapper"><span class="nav-number">1.3.</span> <span class="nav-text">mybatis的mapper</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#sql解析"><span class="nav-number">1.4.</span> <span class="nav-text">sql解析</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mybatis-pagehelper："><span class="nav-number">2.</span> <span class="nav-text">mybatis-pagehelper：</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mybatis-plus"><span class="nav-number">3.</span> <span class="nav-text">mybatis-plus:</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#mybatis-plus中使用缓存"><span class="nav-number">4.</span> <span class="nav-text">mybatis-plus中使用缓存</span></a></li></ol></div>
             
 
           </div>
