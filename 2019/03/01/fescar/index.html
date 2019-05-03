@@ -68,7 +68,7 @@
 
 
 
-  <meta name="keywords" content="Hexo, NexT">
+  <meta name="keywords" content="分布式事务,">
 
 
 
@@ -79,17 +79,18 @@
 
 
 
-<meta name="description" content="关于你的描述……">
-<meta property="og:type" content="website">
-<meta property="og:title" content="关于我">
-<meta property="og:url" content="http://yoursite.com/about/index.html">
+<meta name="description" content="运行fescar心得： 链接mysql报错，时区没设置：12show VARIABLES like &amp;apos;%time_zone%&amp;apos;;set global time_zone=&amp;apos;+8:00&amp;apos;;   2、缺点：  有两个请求，对A表的一条数据的一个字段进行更新，第一次更新失败，第二次更新成功，这时候，第一次的回滚会不会导致第二次的更新失败？  答：fescar中有全">
+<meta name="keywords" content="分布式事务">
+<meta property="og:type" content="article">
+<meta property="og:title" content="fescar">
+<meta property="og:url" content="http://yoursite.com/2019/03/01/fescar/index.html">
 <meta property="og:site_name" content="liangsu&#39;s Notes">
-<meta property="og:description" content="关于你的描述……">
+<meta property="og:description" content="运行fescar心得： 链接mysql报错，时区没设置：12show VARIABLES like &amp;apos;%time_zone%&amp;apos;;set global time_zone=&amp;apos;+8:00&amp;apos;;   2、缺点：  有两个请求，对A表的一条数据的一个字段进行更新，第一次更新失败，第二次更新成功，这时候，第一次的回滚会不会导致第二次的更新失败？  答：fescar中有全">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-03-08T12:27:08.081Z">
+<meta property="og:updated_time" content="2019-05-03T07:16:15.104Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="关于我">
-<meta name="twitter:description" content="关于你的描述……">
+<meta name="twitter:title" content="fescar">
+<meta name="twitter:description" content="运行fescar心得： 链接mysql报错，时区没设置：12show VARIABLES like &amp;apos;%time_zone%&amp;apos;;set global time_zone=&amp;apos;+8:00&amp;apos;;   2、缺点：  有两个请求，对A表的一条数据的一个字段进行更新，第一次更新失败，第二次更新成功，这时候，第一次的回滚会不会导致第二次的更新失败？  答：fescar中有全">
 
 
 
@@ -119,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/about/">
+  <link rel="canonical" href="http://yoursite.com/2019/03/01/fescar/">
 
 
 
 
 
-  <title>关于我 | liangsu's Notes</title>
+  <title>fescar | liangsu's Notes</title>
   
 
 
@@ -250,34 +251,156 @@
 
   <div id="posts" class="posts-expand">
     
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/03/01/fescar/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="liangsu">
+      <meta itemprop="description" content>
+      <meta itemprop="image" content="/uploads/avatar.png">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="liangsu's Notes">
+    </span>
+
     
-    
-    <div class="post-block page">
       <header class="post-header">
 
-	<h1 class="post-title" itemprop="name headline">关于我</h1>
-
-
-
-</header>
-
-      
-      
-      
-      <div class="post-body">
         
         
-          <p>关于你的描述……</p>
-
+          <h1 class="post-title" itemprop="name headline">fescar</h1>
         
-      </div>
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-03-01T22:00:47+08:00">
+                2019-03-01
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
       
       
+
+      
+        <h2 id="运行fescar心得："><a href="#运行fescar心得：" class="headerlink" title="运行fescar心得："></a>运行fescar心得：</h2><ol>
+<li>链接mysql报错，时区没设置：<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">show VARIABLES like &apos;%time_zone%&apos;;</span><br><span class="line">set global time_zone=&apos;+8:00&apos;;</span><br></pre></td></tr></table></figure>
+</li>
+</ol>
+<p>2、缺点：</p>
+<ul>
+<li>有两个请求，对A表的一条数据的一个字段进行更新，第一次更新失败，第二次更新成功，这时候，第一次的回滚会不会导致第二次的更新失败？<br>  答：fescar中有全局锁</li>
+<li>在执行回滚的时候，某一个回滚的微服务突然死了，这个微服务是否会回滚失败？</li>
+</ul>
+
       
     </div>
     
     
     
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/分布式事务/" rel="tag"># 分布式事务</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/02/09/mysql主从复制/" rel="next" title="mysql主从复制">
+                <i class="fa fa-chevron-left"></i> mysql主从复制
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/03/07/jvm自动内存管理/" rel="prev" title="jvm自动内存管理">
+                jvm自动内存管理 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
   </div>
 
 
@@ -286,6 +409,10 @@
 
 
           
+
+  
+
+
 
         </div>
         
@@ -306,8 +433,17 @@
       
 
       
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
 
-      <section class="site-overview-wrap sidebar-panel sidebar-panel-active">
+      <section class="site-overview-wrap sidebar-panel">
         <div class="site-overview">
           <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
             
@@ -370,6 +506,22 @@
         </div>
       </section>
 
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#运行fescar心得："><span class="nav-number">1.</span> <span class="nav-text">运行fescar心得：</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
       
 
       
